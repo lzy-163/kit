@@ -1,0 +1,51 @@
+name: BFP isolated verification 21f3bd031718
+'on':
+  push:
+    branches:
+    - bfp-isolated-21f3bd031718
+permissions: {}
+jobs:
+  buggy:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - node-version: 16
+          os:
+          - ubuntu-latest
+          - windows-latest
+          e2e-browser: chromium
+        - node-version: 18
+          os: ubuntu-latest
+          e2e-browser: chromium
+    steps:
+    - name: Check matrix OS and artifact name
+      env:
+        OS_JSON: ${{ toJSON(matrix.os) }}
+        ARTIFACT_NAME: (checked only for scalar OS entries)
+      run: python -c 'import json, os; value=json.loads(os.environ["OS_JSON"]); print(value, os.environ["ARTIFACT_NAME"]);
+        assert isinstance(value, str), value'
+  human:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - node-version: 16
+          os: ubuntu-latest
+          e2e-browser: chromium
+        - node-version: 16
+          os: windows-latest
+          e2e-browser: chromium
+        - node-version: 18
+          os: ubuntu-latest
+          e2e-browser: chromium
+    steps:
+    - name: Check matrix OS and artifact name
+      env:
+        OS_JSON: ${{ toJSON(matrix.os) }}
+        ARTIFACT_NAME: test-failure-${{ github.run_id }}-${{ matrix.os }}-${{ matrix.node-version }}-${{ matrix.e2e-browser
+          }}
+      run: python -c 'import json, os; value=json.loads(os.environ["OS_JSON"]); print(value, os.environ["ARTIFACT_NAME"]);
+        assert isinstance(value, str), value'
