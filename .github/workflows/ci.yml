@@ -40,14 +40,17 @@ jobs:
       matrix:
         include:
           - node-version: 16
-            os: [ubuntu-latest, windows-latest]
+            os: ubuntu-latest
+            e2e-browser: 'chromium'
+          - node-version: 16
+            os: windows-latest
             e2e-browser: 'chromium'
           - node-version: 18
             os: ubuntu-latest
             e2e-browser: 'chromium'
     env:
       TURBO_CACHE_KEY: ${{ matrix.os }}-${{ matrix.node-version }}
-      KIT_E2E_BROWSER: ${{matrix.e2e-browser}}
+      KIT_E2E_BROWSER: ${{ matrix.e2e-browser }}
     steps:
       - run: git config --global core.autocrlf false
       - uses: actions/checkout@v3
@@ -85,7 +88,7 @@ jobs:
             e2e-browser: 'webkit'
     env:
       TURBO_CACHE_KEY: ${{ matrix.os }}-${{ matrix.node-version }}
-      KIT_E2E_BROWSER: ${{matrix.e2e-browser}}
+      KIT_E2E_BROWSER: ${{ matrix.e2e-browser }}
     steps:
       - run: git config --global core.autocrlf false
       - uses: actions/checkout@v3
